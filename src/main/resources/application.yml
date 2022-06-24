@@ -1,0 +1,14 @@
+micronaut:
+  application:
+    name: TODO_App
+datasources:
+  default:
+    url: jdbc:mysql://localhost:3306/Todo
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 'logic123'
+    dialect: MYSQL
+netty:
+  default:
+    allocator:
+      max-order: 3
