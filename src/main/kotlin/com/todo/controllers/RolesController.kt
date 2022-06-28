@@ -13,17 +13,21 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import io.micronaut.http.annotation.QueryValue
+import io.micronaut.validation.Validated
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Optional
+import javax.validation.Valid
+import javax.validation.constraints.NotNull
 
+@Validated
 @Controller("/roles")
 class RolesController(private val roleRepository: RoleRepository) {
 
     private var rolesServices: RolesServices = RolesServices()
 
     @Post(value = "/saveRole", produces = [MediaType.APPLICATION_JSON])
-    suspend fun saveRole(@QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String): HttpResponse<ResponseModel<String>> {
+    suspend fun saveRole(@NotNull @QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String): HttpResponse<ResponseModel<String>> {
         return try {
             val rolesModel = RolesModel(accessLevel = level, name = name)
             rolesServices.saveRole(roleRepository, rolesModel)
@@ -51,7 +55,7 @@ class RolesController(private val roleRepository: RoleRepository) {
     }
 
     @Delete(value = "/delete", produces = [MediaType.APPLICATION_JSON])
-    suspend fun deleteRoleById(@QueryValue(value = "id") id: Int): HttpResponse<ResponseModel<String>> {
+    suspend fun deleteRoleById(@NotNull @QueryValue(value = "id") id: Int): HttpResponse<ResponseModel<String>> {
         return try {
             rolesServices.deleteById(roleRepository, id)
             HttpResponse.ok(withContext(Dispatchers.IO) {
@@ -65,7 +69,7 @@ class RolesController(private val roleRepository: RoleRepository) {
     }
 
     @Put(value = "/update")
-    suspend fun updateRole(@Body rolesModel: RolesModel): HttpResponse<ResponseModel<String>> {
+    suspend fun updateRole(@Body @Valid rolesModel: RolesModel): HttpResponse<ResponseModel<String>> {
         return try {
             rolesServices.updateRoles(roleRepository, rolesModel)
             HttpResponse.ok(withContext(Dispatchers.IO) {
@@ -79,7 +83,7 @@ class RolesController(private val roleRepository: RoleRepository) {
     }
 
     @Get(value = "/findById")
-    suspend fun findRoleById(@QueryValue("id") id: Int): HttpResponse<ResponseModel<Optional<RolesModel>>> {
+    suspend fun findRoleById(@NotNull @QueryValue("id") id: Int): HttpResponse<ResponseModel<Optional<RolesModel>>> {
         return try {
             HttpResponse.ok(withContext(Dispatchers.IO) {
                 ResponseModel.Success(rolesServices.findById(roleRepository, id))

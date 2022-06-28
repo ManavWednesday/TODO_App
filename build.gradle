@@ -41,7 +41,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.1")
-
+    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.1")
 
 }
 
