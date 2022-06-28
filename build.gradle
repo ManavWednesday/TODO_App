@@ -37,6 +37,12 @@ dependencies {
     implementation("io.micronaut.data:micronaut-data-jdbc:3.4.2")
     runtimeOnly("com.h2database:h2")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.1")
+
+
 }
 
 
