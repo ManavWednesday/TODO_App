@@ -6,6 +6,4 @@ import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.CrudRepository
 
 @JdbcRepository(dialect = Dialect.MYSQL)
-interface RoleRepository : CrudRepository<RolesModel, Int> {
-
-}
+interface RoleRepository : CrudRepository<RolesModel, Int>

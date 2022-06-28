@@ -6,12 +6,16 @@ import com.todo.repository.RoleRepository
 import com.todo.services.RolesServices
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.Put
 import io.micronaut.http.annotation.QueryValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.Optional
 
 @Controller("/roles")
 class RolesController(private val roleRepository: RoleRepository) {
@@ -19,29 +23,85 @@ class RolesController(private val roleRepository: RoleRepository) {
     private var rolesServices: RolesServices = RolesServices()
 
     @Post(value = "/saveRole", produces = [MediaType.APPLICATION_JSON])
-    suspend fun getAllRoles(@QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String) : String {
+    suspend fun saveRole(@QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String): HttpResponse<ResponseModel<String>> {
         return try {
-            val rolesModel = RolesModel(accessLevel = level, name =  name)
+            val rolesModel = RolesModel(accessLevel = level, name = name)
             rolesServices.saveRole(roleRepository, rolesModel)
-            "True"
-        }
-        catch (e : Exception){
-            e.toString()
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Success("True")
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Error(e.toString())
+            })
         }
     }
 
     @Get(value = "/find", produces = [MediaType.APPLICATION_JSON])
-    suspend fun findALl() : HttpResponse<ResponseModel<MutableIterable<RolesModel>>> {
+    suspend fun findAll(): HttpResponse<ResponseModel<MutableIterable<RolesModel>>> {
         return try {
-            HttpResponse.ok(withContext(Dispatchers.IO){
-                ResponseModel.Success<MutableIterable<RolesModel>>(rolesServices.findAll(roleRepository))
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Success(rolesServices.findAll(roleRepository))
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Error(e.toString(), null)
             })
         }
-        catch (e : Exception) {
-            println(e)
-            HttpResponse.ok(withContext(Dispatchers.IO){
-                ResponseModel.Error(e.toString(), null)
-            } )
+    }
+
+    @Delete(value = "/delete", produces = [MediaType.APPLICATION_JSON])
+    suspend fun deleteRoleById(@QueryValue(value = "id") id: Int): HttpResponse<ResponseModel<String>> {
+        return try {
+            rolesServices.deleteById(roleRepository, id)
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Success("True")
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Error(e.toString())
+            })
+        }
+    }
+
+    @Put(value = "/update")
+    suspend fun updateRole(@Body rolesModel: RolesModel): HttpResponse<ResponseModel<String>> {
+        return try {
+            rolesServices.updateRoles(roleRepository, rolesModel)
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Success("True")
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Error(e.toString())
+            })
+        }
+    }
+
+    @Get(value = "/findById")
+    suspend fun findRoleById(@QueryValue("id") id: Int): HttpResponse<ResponseModel<Optional<RolesModel>>> {
+        return try {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Success(rolesServices.findById(roleRepository, id))
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Error(e.toString())
+            })
+        }
+    }
+
+    @Delete(value = "deleteAll")
+    suspend fun deleteRoles(): HttpResponse<ResponseModel<String>> {
+        return try {
+            rolesServices.deleteAllRoles(roleRepository)
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Success("True")
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO) {
+                ResponseModel.Error(e.toString())
+            })
         }
     }
 }
