@@ -1,10 +1,12 @@
 package com.todo.models
 
 import io.micronaut.data.annotation.GeneratedValue
+import io.micronaut.data.annotation.MappedEntity
 import java.sql.Timestamp
 import javax.persistence.Column
 import javax.persistence.Id
 
+@MappedEntity(value = "todos")
 data class TodoModel(
         @Id
         @GeneratedValue(value = GeneratedValue.Type.AUTO)

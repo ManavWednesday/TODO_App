@@ -3,6 +3,7 @@ package com.todo.controllers
 import com.todo.models.ResponseModel
 import com.todo.models.RolesModel
 import com.todo.repository.RoleRepository
+import com.todo.requestModels.RolesRequestModel
 import com.todo.services.RolesServices
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -27,10 +28,10 @@ class RolesController(private val roleRepository: RoleRepository) {
     private var rolesServices: RolesServices = RolesServices()
 
     @Post(value = "/saveRole", produces = [MediaType.APPLICATION_JSON])
-    suspend fun saveRole(@NotNull @QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String): HttpResponse<ResponseModel<String>> {
+    suspend fun saveRole(@QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String): HttpResponse<ResponseModel<String>> {
         return try {
-            val rolesModel = RolesModel(accessLevel = level, name = name)
-            rolesServices.saveRole(roleRepository, rolesModel)
+            val rolesRequestModel = RolesRequestModel(accessLevel = level, name = name)
+            rolesServices.saveRole(roleRepository, rolesRequestModel)
             HttpResponse.ok(withContext(Dispatchers.IO) {
                 ResponseModel.Success("True")
             })
@@ -69,9 +70,9 @@ class RolesController(private val roleRepository: RoleRepository) {
     }
 
     @Put(value = "/update")
-    suspend fun updateRole(@Body @Valid rolesModel: RolesModel): HttpResponse<ResponseModel<String>> {
+    suspend fun updateRole(@Body @Valid rolesRequestModel: RolesRequestModel): HttpResponse<ResponseModel<String>> {
         return try {
-            rolesServices.updateRoles(roleRepository, rolesModel)
+            rolesServices.updateRoles(roleRepository, rolesRequestModel)
             HttpResponse.ok(withContext(Dispatchers.IO) {
                 ResponseModel.Success("True")
             })
