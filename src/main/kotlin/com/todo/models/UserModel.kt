@@ -4,9 +4,10 @@ import io.micronaut.data.annotation.GeneratedValue
 import io.micronaut.data.annotation.MappedEntity
 import javax.persistence.Column
 import javax.persistence.Id
+import javax.validation.constraints.NotNull
 
 @MappedEntity(value = "users")
-data class UsersModel(
+data class UserModel(
         @Id
         @GeneratedValue(value = GeneratedValue.Type.AUTO)
         val id : Int = 0,
@@ -14,10 +15,12 @@ data class UsersModel(
         val firstName : String,
         @Column(name = "last_name")
         val lastName : String,
+        @NotNull
         @Column(name = "username")
         val userName : String,
         @Column(name = "password")
         val password : String,
+        @NotNull
         @Column(name = "email")
         val email : String,
         @Column(name = "mobile")
