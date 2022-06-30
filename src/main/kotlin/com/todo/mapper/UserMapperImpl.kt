@@ -2,6 +2,7 @@ package com.todo.mapper
 
 import com.todo.models.UserModel
 import com.todo.requestModels.UserRequestModel
+import java.sql.Timestamp
 
 interface UserMapper : Mapper<UserRequestModel, UserModel>
 
@@ -15,7 +16,10 @@ class UserMapperImpl : UserMapper {
                 password = from.password,
                 email = from.email,
                 mobile = from.mobile,
-                roleId = from.roleId
+                roleId = from.roleId,
+                createdAt = from.createdAt?: Timestamp(System.currentTimeMillis()),
+                updatedAt = null,
+                deletedAt = null
         )
     }
 

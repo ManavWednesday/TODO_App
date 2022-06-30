@@ -24,4 +24,8 @@ class UserService {
     fun updateUser(usersRepository: UsersRepository, userRequestModel: UserRequestModel) {
         usersRepository.update(userMapper.map(userRequestModel))
     }
+
+    fun deleteAllUser(usersRepository: UsersRepository) {
+        usersRepository.deleteAll()
+    }
 }

@@ -30,7 +30,7 @@ class RolesController(private val roleRepository: RoleRepository) {
     @Post(value = "/saveRole", produces = [MediaType.APPLICATION_JSON])
     suspend fun saveRole(@QueryValue(value = "level") level: Int, @QueryValue(value = "name") name: String): HttpResponse<ResponseModel<String>> {
         return try {
-            val rolesRequestModel = RolesRequestModel(accessLevel = level, name = name)
+            val rolesRequestModel = RolesRequestModel(accessLevel = level, name = name, createdAt = null, updatedAt = null, deletedAt = null )
             rolesServices.saveRole(roleRepository, rolesRequestModel)
             HttpResponse.ok(withContext(Dispatchers.IO) {
                 ResponseModel.Success("True")

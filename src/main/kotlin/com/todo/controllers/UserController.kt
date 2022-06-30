@@ -6,13 +6,7 @@ import com.todo.repository.UsersRepository
 import com.todo.requestModels.UserRequestModel
 import com.todo.services.UserService
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Delete
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Put
-import io.micronaut.http.annotation.QueryValue
+import io.micronaut.http.annotation.*
 import io.micronaut.validation.Validated
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -69,6 +63,20 @@ class UserController(private val usersRepository: UsersRepository) {
     suspend fun updateUserById(@Body @Valid userRequestModel: UserRequestModel) : HttpResponse<ResponseModel<String>> {
         return try {
             userService.updateUser(usersRepository, userRequestModel)
+            HttpResponse.ok(withContext(Dispatchers.IO){
+                ResponseModel.Success("True")
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO){
+                ResponseModel.Error(e.toString())
+            })
+        }
+    }
+
+    @Delete(value = "deleteAll")
+    suspend fun deleteAllUser() : HttpResponse<ResponseModel<String>> {
+        return try {
+            userService.deleteAllUser(usersRepository)
             HttpResponse.ok(withContext(Dispatchers.IO){
                 ResponseModel.Success("True")
             })

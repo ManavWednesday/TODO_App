@@ -1,5 +1,6 @@
 package com.todo.requestModels
 
+import java.sql.Timestamp
 import javax.validation.constraints.NotNull
 
 data class UserRequestModel(
@@ -12,5 +13,8 @@ data class UserRequestModel(
         @NotNull
         val email : String,
         val mobile : Int,
-        val roleId : Int
+        val roleId : Int,
+        var createdAt: Timestamp?,
+        var updatedAt: Timestamp?,
+        var deletedAt: Timestamp?
 )
