@@ -30,4 +30,8 @@ class TodoService {
     fun getAllUserTodos(todoRepository: TodoRepository, userId: Int): List<TodoModel> {
         return todoRepository.findAllByUserId(userId)
     }
+
+    fun deleteTodoById(todoRepository: TodoRepository, id: Int) {
+        todoRepository.deleteById(id)
+    }
 }

@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.validation.Valid
+import javax.validation.constraints.NotNull
 
 @Validated
 @Controller(value = "todo" )
@@ -68,7 +69,7 @@ class TodoController(private val todoRepository: TodoRepository) {
     }
 
     @Get(value = "getTodoById")
-    suspend fun getTodoById(@QueryValue(value = "id") id : Int) : HttpResponse<ResponseModel<Optional<TodoModel>>>{
+    suspend fun getTodoById(@NotNull @QueryValue(value = "id") id : Int) : HttpResponse<ResponseModel<Optional<TodoModel>>>{
         return try {
             HttpResponse.ok(withContext(Dispatchers.IO){
                 ResponseModel.Success(todoService.getTodoById(todoRepository, id))
@@ -81,10 +82,24 @@ class TodoController(private val todoRepository: TodoRepository) {
     }
 
     @Get(value = "getAllUserTodo")
-    suspend fun getAllUserTodo(@QueryValue(value = "user_id") userId: Int) : HttpResponse<ResponseModel<List<TodoModel>>> {
+    suspend fun getAllUserTodo(@NotNull @QueryValue(value = "user_id") userId: Int) : HttpResponse<ResponseModel<List<TodoModel>>> {
         return try {
             HttpResponse.ok(withContext(Dispatchers.IO){
                 ResponseModel.Success(todoService.getAllUserTodos(todoRepository, userId))
+            })
+        } catch (e: Exception) {
+            HttpResponse.ok(withContext(Dispatchers.IO){
+                ResponseModel.Error(e.toString())
+            })
+        }
+    }
+
+    @Delete(value = "deleteTodoById")
+    suspend fun deleteTodoById(@NotNull @QueryValue(value = "id") id: Int) : HttpResponse<ResponseModel<String>> {
+        return try {
+            todoService.deleteTodoById(todoRepository, id)
+            HttpResponse.ok(withContext(Dispatchers.IO){
+                ResponseModel.Success("True")
             })
         } catch (e: Exception) {
             HttpResponse.ok(withContext(Dispatchers.IO){

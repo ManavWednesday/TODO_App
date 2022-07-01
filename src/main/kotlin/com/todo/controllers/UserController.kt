@@ -34,6 +34,7 @@ class UserController(private val usersRepository: UsersRepository) {
     @Post(value = "addUser")
     suspend fun addUser(@Body @Valid userRequestModel: UserRequestModel) : HttpResponse<ResponseModel<String>>{
         return try {
+
             userService.addUser(usersRepository, userRequestModel)
             HttpResponse.ok(withContext(Dispatchers.IO){
                 ResponseModel.Success("True")

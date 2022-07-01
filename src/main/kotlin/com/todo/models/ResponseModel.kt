@@ -1,12 +1,12 @@
 package com.todo.models
 
 sealed class ResponseModel<T>(
-        val status: Int? = null,
         val message:String? = null,
-        val data: T?
+        val data: T?,
+        val error: String?
 ) {
 
-    class Success<T>(data: T) : ResponseModel<T>(1, "Success", data)
+    class Success<T>(data: T) : ResponseModel<T>( "Success", data, null)
 
-    class Error<T>(message: String?, data: T? = null) : ResponseModel<T>(0, message, data)
+    class Error<T>(message: String?, error: String? = null) : ResponseModel<T>(message, null, error)
 }
