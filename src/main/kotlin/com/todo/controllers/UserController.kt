@@ -7,12 +7,16 @@ import com.todo.requestModels.UserRequestModel
 import com.todo.services.UserService
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import io.micronaut.validation.Validated
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.annotation.security.PermitAll
 import javax.validation.Valid
 
 @Validated
+@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller(value = "users")
 class UserController(private val usersRepository: UsersRepository) {
 
@@ -31,6 +35,7 @@ class UserController(private val usersRepository: UsersRepository) {
         }
     }
 
+    @PermitAll
     @Post(value = "addUser")
     suspend fun addUser(@Body @Valid userRequestModel: UserRequestModel) : HttpResponse<ResponseModel<String>>{
         return try {
